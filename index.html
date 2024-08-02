@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crud app</title>
+    <script>
+        async function createuser(){
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            await fetch('http://localhost:3000/users',{
+                method: 'POST',
+                headers: {'Content-type': 'application/json'},
+                body: JSON.stringify({name,email})
+            })
+
+        }
+
+        async function deleteuser(id){
+            await fetch(`http://localhost:3000/users/${id}`,{
+                method: 'DELETE'
+            })
+
+        }
+    </script>
+</head>
+<body>
+    <h1>Crud app</h1>
+    <div>
+        <input type="text" id="name" placeholder="Name">
+        <input type="email" id="email" placeholder="Email">
+        <button onclick="createuser()">Create user</button>
+
+    </div>
+    <div>
+        <input type="number" id="id" placeholder="idno">
+        <button onclick="deleteuser(document.getElementById('id').value)">Deltet User</button>
+      </div>
+    
+</body>
+</html>

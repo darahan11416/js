@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRUD Application</title>
+  <script>
+    async function fetchUsers() {
+      const response = await fetch('http://localhost:3000/users');
+      const data = await response.json();
+      const userTable = document.getElementById('userTable');
+      userTable.innerHTML = '';
+      data.forEach(user => {
+        const row = `<tr>
+                      <td>${user.id}</td>
+                      <td>${user.name}</td>
+                      <td>${user.email}</td>
+                      <td>
+                        <button onclick="editUser(${user.id})">Edit</button>
+                        <button onclick="deleteUser(${user.id})">Delete</button>
+                      </td>
+                    </tr>`;
+        userTable.innerHTML += row;
+      });
+    }
+
+    async function createUser() {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      await fetch('http://localhost:3000/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email })
+      });
+      fetchUsers();
+    }
+
+    async function editUser(id) {
+      const name = prompt('Enter new name:');
+      const email = prompt('Enter new email:');
+      await fetch(`http://localhost:3000/users/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email })
+      });
+      fetchUsers();
+    }
+
+    async function deleteUser(id) {
+      await fetch(`http://localhost:3000/users/${id}`, {
+        method: 'DELETE'
+      });
+      fetchUsers();
+    }
+
+    window.onload = fetchUsers;
+  </script>
+</head>
+<body>
+  <h1>CRUD Application</h1>
+  <div>
+    <input type="text" id="name" placeholder="Name">
+    <input type="email" id="email" placeholder="Email">
+    <button onclick="createUser()">Create User</button>
+  </div>
+ 
+  <table border="1" id="userTable">
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Actions</th>
+    </tr>
+  </table>
+</body>
+</html> 
